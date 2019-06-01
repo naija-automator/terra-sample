@@ -36,3 +36,7 @@ resource "aws_security_group" "terra1-sg" {
     Name = "terra1-billing"
   }
 }
+
+output "public_ip" {
+  value = "${aws_instance.terra1.public_ip}"
+}
