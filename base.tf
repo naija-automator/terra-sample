@@ -10,7 +10,7 @@ resource "aws_instance" "terra1" {
   user_data = <<-EOF
               #!/bin/bash
               echo "Hello, World! This is Terra1." > index.html
-              nohup busybox httpd -f -p 8080 &
+              nohup busybox httpd -f -p "{$var.server_port}" &
               EOF
 
   tags {
@@ -26,8 +26,8 @@ resource "aws_security_group" "terra1-sg" {
   name   = "terra1-sec-grp"
 
   ingress {
-    from_port  =  8080
-    to_port    =  8080
+    from_port  =  "${var.server_port}"
+    to_port    =  "${var.server_port}"
     protocol   =  "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -35,6 +35,11 @@ resource "aws_security_group" "terra1-sg" {
   tags {
     Name = "terra1-billing"
   }
+}
+
+variable "server_port" { 
+  description = "The port the server will use for HTTP requests"
+  default = 8080
 }
 
 output "public_ip" {
